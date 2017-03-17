@@ -16,22 +16,7 @@
         <div data-filter="done" class="filters__item">завершенные</div>
         <div data-filter="todo" class="filters__item">незавершенные</div>
     </div>
-    <ul class="list">
-        <li class="list__item task task_done">
-            <div class="task__status task__status_todo"></div>
-            <span class="task__name">Позвонить в сервис</span>
-            <div class="task__delete-button">❌</div>
-        </li><li class="list__item task task_todo">
-            <div class="task__status task__status_todo"></div>
-            <span class="task__name">Купить хлеб</span>
-            <div class="task__delete-button">❌</div>
-        </li>
-        <li class="list__item task task_todo">
-            <div class="task__status task__status_todo"></div>
-            <span class="task__name">Захватить мир</span>
-            <div class="task__delete-button">❌</div>
-        </li>
-    </ul>
+    <ul class="list"></ul>
     <div class="statistic">
         Всего:
         <div class="statistic__total">3</div>
@@ -41,6 +26,13 @@
         <div class="statistic__left">2</div>
     </div>
 </div>
+<template id="todoTemplate" style="display: none">
+    <li class="list__item task">
+        <div class="task__status task__status_todo"></div>
+        <span class="task__name">{{TODO}}</span>
+        <div class="task__delete-button">❌</div>
+    </li>
+</template>
 <script src="app.js"></script>
 </body>
 </html>
