@@ -47,9 +47,9 @@ function onDeleteBtnClick() {
     listElement.removeChild(currentTodo);
 }
 
-function setTodoStatusClassName(task, flag) {
-    task.classList.toggle('task_todo', flag);
-    task.classList.toggle('task_done', !flag);
+function setTodoStatusClassName(todo, flag) {
+    todo.classList.toggle('task_todo', flag);
+    todo.classList.toggle('task_done', !flag);
 }
 
 todoList
@@ -64,14 +64,56 @@ todoList
 listElement.addEventListener('click', onListClick);
 
 function onListClick(event) {
-    console.log('--- event.target', event.target);
     var target = event.target;
+    var element;
 
     if (isStatusBtn(target)) {
+        element = target.parentNode;
+        changeTodoStatus(element);
+    }
 
+    if (isDeleteBtn(target)) {
+        element = target.parentNode;
+        deleteTodo(element);
     }
 }
 
-function isStatusBtn() {
-    // реализуйте c помощью classList
+function isStatusBtn(target) {
+    return target.classList.contains('task__status');
 }
+
+function isDeleteBtn(target) {
+    return target.classList.contains('task__delete-button');
+}
+
+function changeTodoStatus(element) {
+    var isTodo = element.classList.contains('task_todo');
+    setTodoStatusClassName(element, !isTodo);
+}
+
+function deleteTodo(element) {
+    listElement.removeChild(element);
+}
+
+// пришло время реализовать ввод по имени задачи
+var inputElement = document.querySelector('.add-task__input');
+inputElement.addEventListener('keydown', onInputKeydown);
+
+function onInputKeydown(event) {
+    console.log('--- event.keyCode', event.keyCode);
+    if (event.keyCode !== 13) {
+        return;
+    }
+
+    var ENTER_KEYCODE = 13;
+    if (event.keyCode !== ENTER_KEYCODE) {
+        return;
+    }
+
+    // значит кликнули
+    console.log('--- inputElement.value', inputElement.value);
+}
+
+// Задача:
+// 1. Вставьте новую тудушку
+// 2. Вставьте новую тудушку при отсутствии таких же
