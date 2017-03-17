@@ -36,32 +36,10 @@ function addTodoFromTemplate(todo) {
     return newElement;
 }
 
-function onStatusBtnClick(event) {
-    var currentTodo = event.target.parentNode;
-    var isTodo = currentTodo.classList.contains('task_todo');
-    setTodoStatusClassName(currentTodo, !isTodo);
-}
-
-function onDeleteBtnClick() {
-    var currentTodo = event.target.parentNode;
-    listElement.removeChild(currentTodo);
-}
-
 function setTodoStatusClassName(todo, flag) {
     todo.classList.toggle('task_todo', flag);
     todo.classList.toggle('task_done', !flag);
 }
-
-todoList
-    .map(addTodoFromTemplate)
-    .forEach(function (element) {
-        listElement.appendChild(element);
-    });
-
-// добавлять слушателей на каждую кнопку – затратно для памяти
-// к счастью события распространяются по всем уровням вложенности,
-// и событие клика можно ловить выше – на списке
-listElement.addEventListener('click', onListClick);
 
 function onListClick(event) {
     var target = event.target;
@@ -95,12 +73,22 @@ function deleteTodo(element) {
     listElement.removeChild(element);
 }
 
+todoList
+    .map(addTodoFromTemplate)
+    .forEach(function (element) {
+        listElement.appendChild(element);
+    });
+
+// добавлять слушателей на каждую кнопку – затратно для памяти
+// к счастью, события распространяются по всем уровням вложенности,
+// и событие клика можно ловить выше – на списке
+listElement.addEventListener('click', onListClick);
+
 // пришло время реализовать ввод по имени задачи
 var inputElement = document.querySelector('.add-task__input');
 inputElement.addEventListener('keydown', onInputKeydown);
 
 function onInputKeydown(event) {
-    console.log('--- event.keyCode', event.keyCode);
     if (event.keyCode !== 13) {
         return;
     }
@@ -110,10 +98,33 @@ function onInputKeydown(event) {
         return;
     }
 
-    // значит кликнули
-    console.log('--- inputElement.value', inputElement.value);
+    var todoName = inputElement.value;
+
+    if (checkIfTodoAlreadyExists(todoName)) {
+        return;
+    }
+
+    var todo = createNewTodo(todoName);
+    listElement.appendChild(addTodoFromTemplate(todo));
+    inputElement.value = '';
+}
+
+function checkIfTodoAlreadyExists(todoName) {
+    var todoElements = listElement.querySelectorAll('.task__name');
+    var namesList = Array.prototype.map.call(todoElements, function(element) {
+        return element.textContent;
+    });
+    return namesList.indexOf(todoName) > -1;
+}
+
+function createNewTodo(name) {
+    return {
+        name: name,
+        status: 'todo'
+    }
 }
 
 // Задача:
-// 1. Вставьте новую тудушку
-// 2. Вставьте новую тудушку при отсутствии таких же
+// исправьте багу с добавлением пустого поля, с добавлением пробельных символов
+// исправьте багу с добавлением insertBefore в пустой массив
+// создайте статистику
