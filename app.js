@@ -1,54 +1,59 @@
 "use strict";
 
-
-var listElement = document.querySelector('.list'); // ← добавляйте Element для явного указания переменной
-// https://learn.javascript.ru/searching-elements-dom
-
-// https://developer.mozilla.org/en-US/docs/Web/API/Element
-// https://developer.mozilla.org/en-US/docs/Web/API/Node
-// https://learn.javascript.ru/traversing-dom
-console.dir(listElement);
-console.log(listElement.children);
-console.log(listElement.firstChild);
-console.log(listElement.firstElementChild);
-console.log(listElement.lastElementChild);
-console.log(listElement.parentElement);
-//
+var listElement = document.querySelector('.list');
 var itemElementList = listElement.children;
-// itemElementList = document.querySelectorAll('.list__item');
-// itemElementList = document.querySelectorAll('.list .list__item');
-// в контексте нашей задачи это всё одно и то же
-// В: а на что можно натолкнуться при использовании закомментированных способов?
-//
-// // var itemElements = document.querySelectorAll('.list__item');
-//
-var todo = 'Добавить тудушку в список';
-
-var newItemElement = document.createElement('li');
-newItemElement.classList.add('list__item', 'task', 'task_todo'); // https://developer.mozilla.org/ru/docs/Web/API/Element/classList
-newItemElement.innerHTML = todo; // https://developer.mozilla.org/en-US/docs/Web/API/Element/innerHTML
-
-var htmlToAdd = '<div class="task__status task__status_todo"></div>' +
-    '<span class="task__name">' + todo + '</span>' +
-    '<div class="task__delete-button">❌</div>';
-
-newItemElement.innerHTML = htmlToAdd;
-
-// вставка
-// https://learn.javascript.ru/modifying-document#добавление-элемента-appendchild-insertbefore
-// https://developer.mozilla.org/ru/docs/Web/API/Node/appendChild
-// https://developer.mozilla.org/ru/docs/Web/API/Node/insertBefore
-listElement.appendChild(newItemElement);
-console.log(listElement.children);
-
-listElement.insertBefore(newItemElement, listElement.firstChild);
-console.log(listElement.children);
-
 
 // Задание: добавить несколько тудушек
-// listElement.innerHTML = '';
-// тут ваш классный код
 
+// сформируем задачки
+var todoList = [
+    'Позвонить в сервис',
+    'Купить хлеб',
+    'Захватить мир',
+    'Добавить тудушку в список'
+];
 
+// функция по генерации элементов
+function addTodo(name) {
+    var htmlToAdd = '<div class="task__status task__status_todo"></div>' +
+        '<span class="task__name">' + name + '</span>' +
+        '<div class="task__delete-button">❌</div>';
 
+    var newItemElement = document.createElement('li');
+    newItemElement.classList.add('list__item', 'task', 'task_todo');
+    newItemElement.innerHTML = htmlToAdd;
+    return newItemElement;
+}
 
+// добавление элементов
+todoList
+    .map(addTodo)
+    .forEach(function (element) {
+        listElement.appendChild(element);
+    });
+
+// Альтернативный вариант – template
+// http://frontender.info/template/
+var templateElement = document.getElementById('todoTemplate');
+var templateContainer = 'content' in templateElement ? templateElement.content : templateElement;
+
+// функция по генерации элементов
+function addTodoFromTemplate(name) {
+    var newElement = templateContainer.querySelector('.task').cloneNode(true);
+    newElement.querySelector('.task__name').textContent = name;
+    return newElement;
+}
+
+todoList
+    .map(addTodoFromTemplate)
+    .forEach(function (element) {
+        listElement.appendChild(element);
+    });
+
+// Задание: создайте и отрисуйте список тудушек,
+// в котором одни элементы будут невыполнены, а другие выполнены
+// за выполнение отвечают классы task_todo и task_done
+// добавление делается через classList add/remove:
+// newElement.classList.add('task_todo');
+
+// https://developer.mozilla.org/ru/docs/Web/API/Element/classList
