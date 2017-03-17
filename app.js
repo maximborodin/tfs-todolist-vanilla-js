@@ -73,21 +73,6 @@ function deleteTodo(element) {
     listElement.removeChild(element);
 }
 
-todoList
-    .map(addTodoFromTemplate)
-    .forEach(function (element) {
-        listElement.appendChild(element);
-    });
-
-// добавлять слушателей на каждую кнопку – затратно для памяти
-// к счастью, события распространяются по всем уровням вложенности,
-// и событие клика можно ловить выше – на списке
-listElement.addEventListener('click', onListClick);
-
-// пришло время реализовать ввод по имени задачи
-var inputElement = document.querySelector('.add-task__input');
-inputElement.addEventListener('keydown', onInputKeydown);
-
 function onInputKeydown(event) {
     if (event.keyCode !== 13) {
         return;
@@ -98,14 +83,14 @@ function onInputKeydown(event) {
         return;
     }
 
-    var todoName = inputElement.value;
+    var todoName = inputElement.value.trim();
 
-    if (checkIfTodoAlreadyExists(todoName)) {
+    if (todoName.length === 0 || checkIfTodoAlreadyExists(todoName)) {
         return;
     }
 
     var todo = createNewTodo(todoName);
-    listElement.appendChild(addTodoFromTemplate(todo));
+    insertTodoElement(addTodoFromTemplate(todo));
     inputElement.value = '';
 }
 
@@ -124,7 +109,23 @@ function createNewTodo(name) {
     }
 }
 
+todoList
+    .map(addTodoFromTemplate)
+    .forEach(insertTodoElement);
+
+listElement.addEventListener('click', onListClick);
+
+var inputElement = document.querySelector('.add-task__input');
+inputElement.addEventListener('keydown', onInputKeydown);
+
 // Задача:
-// исправьте багу с добавлением пустого поля, с добавлением пробельных символов
 // исправьте багу с добавлением insertBefore в пустой массив
 // создайте статистику
+//
+function insertTodoElement(elem) {
+    if (listElement.children) {
+        listElement.insertBefore(elem, listElement.firstElementChild);
+    } else {
+        listElement.appendChild(elem);
+    }
+}
