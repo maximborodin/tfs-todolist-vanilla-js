@@ -33,9 +33,6 @@ function addTodoFromTemplate(todo) {
     newElement.querySelector('.task__name').textContent = todo.name;
     setTodoStatusClassName(newElement, todo.status === 'todo');
 
-    // добавим слушателей
-    newElement.querySelector('.task__status').addEventListener('click', onStatusBtnClick);
-    newElement.querySelector('.task__delete-button').addEventListener('click', onDeleteBtnClick);
     return newElement;
 }
 
@@ -50,9 +47,9 @@ function onDeleteBtnClick() {
     listElement.removeChild(currentTodo);
 }
 
-function setTodoStatusClassName(todo, flag) {
-    todo.classList.toggle('task_todo', flag);
-    todo.classList.toggle('task_done', !flag);
+function setTodoStatusClassName(task, flag) {
+    task.classList.toggle('task_todo', flag);
+    task.classList.toggle('task_done', !flag);
 }
 
 todoList
@@ -60,3 +57,21 @@ todoList
     .forEach(function (element) {
         listElement.appendChild(element);
     });
+
+// добавлять слушателей на каждую кнопку – затратно для памяти
+// к счастью события распространяются по всем уровням вложенности,
+// и событие клика можно ловить выше – на списке
+listElement.addEventListener('click', onListClick);
+
+function onListClick(event) {
+    console.log('--- event.target', event.target);
+    var target = event.target;
+
+    if (isStatusBtn(target)) {
+
+    }
+}
+
+function isStatusBtn() {
+    // реализуйте c помощью classList
+}
