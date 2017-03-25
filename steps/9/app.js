@@ -7,13 +7,13 @@ var ENTER_KEYCODE = 13;
 var templateElement = document.getElementById('todoTemplate');
 var templateContainer = 'content' in templateElement ? templateElement.content : templateElement;
 
+// сформируем задачки
 /**
  * @typedef {Object} TodoItem
  * @property {string} name - имя тудушки
  * @property {string} status - статус
  */
 
-// сформируем задачки
 /**
  * @type {Array.<TodoItem>}
  */
@@ -205,7 +205,7 @@ function onInputKeydown(event) {
 }
 
 /**
- * изменяет статус тудушки, обновляет статистиек
+ * изменяет статус тудушки, обновляет статистику
  * @param {Element} element
  */
 function changeTodoStatus(element) {
@@ -216,7 +216,7 @@ function changeTodoStatus(element) {
 }
 
 /**
- * удаляет тудушку
+ * удаляет тудушку, обновляет статистику
  * @param {Element} element
  */
 function deleteTodo(element) {
