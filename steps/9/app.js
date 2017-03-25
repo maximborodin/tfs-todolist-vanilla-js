@@ -196,7 +196,7 @@ function onInputKeydown(event) {
 }
 
 /**
- * изменяет статус тудушки, обновляет статистику
+ * изменяет статус тудушки, обновляет статистиек
  * @param {Element} element
  */
 function changeTodoStatus(element) {
@@ -207,7 +207,7 @@ function changeTodoStatus(element) {
 }
 
 /**
- * удаляет тудушку, обновляет статистику
+ * удаляет тудушку
  * @param {Element} element
  */
 function deleteTodo(element) {
