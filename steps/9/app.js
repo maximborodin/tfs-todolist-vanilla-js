@@ -7,7 +7,16 @@ var ENTER_KEYCODE = 13;
 var templateElement = document.getElementById('todoTemplate');
 var templateContainer = 'content' in templateElement ? templateElement.content : templateElement;
 
+/**
+ * @typedef {Object} TodoItem
+ * @property {string} name - имя тудушки
+ * @property {string} status - статус
+ */
+
 // сформируем задачки
+/**
+ * @type {Array.<TodoItem>}
+ */
 var todoList = [
     {
         name: 'Позвонить в сервис',
@@ -164,7 +173,7 @@ function deleteFromStats(isTodo) {
 
 /**
  * вставляет тудушку и обновляет статистику
- * @param todo
+ * @param {TodoItem} todo
  */
 function insertTodoElement(todo) {
     var elem = addTodoFromTemplate(todo);
