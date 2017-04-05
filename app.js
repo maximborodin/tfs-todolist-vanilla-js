@@ -17,6 +17,7 @@ var templateContainer = 'content' in templateElement ? templateElement.content :
 /**
  * @type {Array.<TodoItem>}
  */
+
 var todoList = [
     {
         name: 'Позвонить в сервис',
@@ -102,25 +103,34 @@ inputElement.addEventListener('keydown', onInputKeydown);
  ==================================*/
 
 // формируем счетчик статистики
-var stats = {
-    done: 0,
-    todo: 0
-};
 
-// необходимые DOM элементы
-var statsElement = document.querySelector('.statistic');
-var statsDonelElement = statsElement.querySelector('.statistic__done');
-var statsTodoElement = statsElement.querySelector('.statistic__left');
-var statsTotalElement = statsElement.querySelector('.statistic__total');
+
+class Statistic {
+  constructor (value, htmlComponent){
+    this.value = value;
+    this.htmlComponent = htmlComponent;
+  }
+  increaseValue() {
+    ++this.value;
+  }
+  decreaseValue() {
+    --this.value;
+  }
+  updateTextContent() {
+    console.log(this.value);
+    this.htmlComponent.textContent = this.value;
+  }
+}
+
 
 // создадим функции работы со статистикой
 /**
  * отрисовывает статистику в DOM
  */
 function renderStats() {
-    statsDonelElement.textContent = stats.done;
-    statsTodoElement.textContent = stats.todo;
-    statsTotalElement.textContent = stats.done + stats.todo;
+  all.updateTextContent();
+  done.updateTextContent();
+  todo.updateTextContent();
 }
 
 // теперь на каждое из действий — обновление статистики
@@ -130,10 +140,11 @@ function renderStats() {
  */
 function addToStats(isTodo) {
     if (isTodo) {
-        stats.todo++;
+      todo.increaseValue();
     } else {
-        stats.done++;
+      done.increaseValue();
     }
+    all.increaseValue();
     renderStats();
 }
 
@@ -143,11 +154,11 @@ function addToStats(isTodo) {
  */
 function changeStats(isTodo) {
     if (isTodo) {
-        stats.todo++;
-        stats.done--;
+      todo.increaseValue();
+      done.decreaseValue();
     } else {
-        stats.todo--;
-        stats.done++;
+      todo.decreaseValue();
+      done.increaseValue();
     }
     renderStats();
 }
@@ -158,69 +169,16 @@ function changeStats(isTodo) {
  */
 function deleteFromStats(isTodo) {
     if (isTodo) {
-        stats.todo--;
+      todo.decreaseValue();
     } else {
-        stats.done--;
+      done.decreaseValue();
     }
+    all.decreaseValue();
     renderStats();
 }
 
 // теперь надо переписать старые методы, чтобы учесть статистику
 
-// /**
-//  * вставляет тудушку и обновляет статистику
-//  * @param {TodoItem} todo
-//  */
-// function insertTodoElement(todo) {
-//     var elem = addTodoFromTemplate(todo);
-//     listElement.insertBefore(elem, listElement.firstElementChild);
-//     addToStats(todo.status === 'todo');
-// }
-
-// из-за изменений в insertTodoElement чуть упростили onInputKeydown
-
-// /**
-//  * отслеживает нажатие ENTER пользователем и создает новую тудушку, если такой нет
-//  * @param {KeyboardEvent} event
-//  */
-// function onInputKeydown(event) {
-//
-//     if (event.keyCode !== ENTER_KEYCODE) {
-//         return;
-//     }
-//
-//     var todoName = inputElement.value.trim();
-//
-//     if (todoName.length === 0 || checkIfTodoAlreadyExists(todoName)) {
-//         return;
-//     }
-//
-//     var todo = createNewTodo(todoName);
-//     insertTodoElement(todo);
-//     inputElement.value = '';
-// }
-
-// /**
-//  * изменяет статус тудушки, обновляет статистику
-//  * @param {Element} element
-//  */
-// function changeTodoStatus(element) {
-//     var isTodo = element.classList.contains('task_todo');
-//     setTodoStatusClassName(element, !isTodo);
-//
-//     changeStats(!isTodo);
-// }
-
-// /**
-//  * удаляет тудушку, обновляет статистику
-//  * @param {Element} element
-//  */
-// function deleteTodo(element) {
-//     var isTodo = element.classList.contains('task_todo');
-//     listElement.removeChild(element);
-//
-//     deleteFromStats(isTodo);
-// }
 
 /*==================================
  =            ФИЛЬТРАЦИЯ            =
@@ -430,8 +388,11 @@ var tasksDone = todoList.filter(function (item) {
     return item.status === 'done';
 }).length;
 
-stats = {
-    done: tasksDone,
-    todo: todoList.length - tasksDone
-};
+
+var statsElement = document.querySelector('.statistic');
+var all = new Statistic(todoList.length, statsElement.querySelector('.statistic__total'));
+var done = new Statistic(tasksDone, statsElement.querySelector('.statistic__done'));
+var todo = new Statistic(todoList.length - tasksDone, statsElement.querySelector('.statistic__left'));
+
+
 renderStats();
