@@ -12,6 +12,7 @@ var templateContainer = 'content' in templateElement ? templateElement.content :
  * @typedef {Object} TodoItem
  * @property {string} name - имя тудушки
  * @property {string} status - статус
+ * @property {Date} date - дата изменения
  */
 
 /**
@@ -21,19 +22,23 @@ var templateContainer = 'content' in templateElement ? templateElement.content :
 var todoList = [
     {
         name: 'Позвонить в сервис',
-        status: 'todo'
+        status: 'todo',
+        date: new Date(2017, 3, 24, 12, 0, 5)
     },
     {
         name: 'Купить хлеб',
-        status: 'done'
+        status: 'done',
+        date: new Date(2017, 3, 24, 9, 25, 48)
     },
     {
         name: 'Захватить мир',
-        status: 'todo'
+        status: 'todo',
+        date: new Date(2017, 3, 24, 17, 6, 31)
     },
     {
         name: 'Добавить тудушку в список',
-        status: 'todo'
+        status: 'todo',
+        date: new Date(2017, 3, 24, 17, 5, 55)
     }
 ];
 
@@ -41,6 +46,7 @@ var todoList = [
 function addTodoFromTemplate(todo) {
     var newElement = templateContainer.querySelector('.task').cloneNode(true);
     newElement.querySelector('.task__name').textContent = todo.name;
+    newElement.querySelector('.task__date').textContent = formatDate(todo.date);
     setTodoStatusClassName(newElement, todo.status === 'todo');
 
     return newElement;
@@ -49,6 +55,31 @@ function addTodoFromTemplate(todo) {
 function setTodoStatusClassName(todo, flag) {
     todo.classList.toggle('task_todo', flag);
     todo.classList.toggle('task_done', !flag);
+}
+
+function formatDate(date) {
+    var hours = date.getHours()
+    if (hours < 9) {
+        hours = '0' + hours;
+    }
+    var minutes = date.getMinutes();
+    if (minutes < 9) {
+        minutes = '0' + minutes;
+    }
+    var seconds = date.getSeconds();
+    if (seconds < 9) {
+        seconds = '0' + seconds;
+    }
+    var day = date.getDay();
+    if (day < 9) {
+        day = '0' + day;
+    }
+    var month = date.getMonth();
+    if (month < 9) {
+        month = '0' + month;
+    }
+    var year = date.getFullYear();
+    return (hours + ":" + minutes + ":" + seconds + "\n" + day + "/" + month + "/" + year);
 }
 
 function onListClick(event) {
@@ -85,7 +116,8 @@ function checkIfTodoAlreadyExists(todoName) {
 function createNewTodo(name) {
     return {
         name: name,
-        status: 'todo'
+        status: 'todo',
+        date: new Date()
     }
 }
 

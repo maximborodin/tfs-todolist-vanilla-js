@@ -7,8 +7,7 @@
 </head>
 <body>
 <h1 class="head">TODO List</h1>
-<div class="container">
-    <div class="add-task">
+<div class="container"> <div class="add-task">
         <input class="add-task__input" placeholder="Имя задачи" autofocus>
     </div>
     <div class="filters">
@@ -28,6 +27,7 @@
 </div>
 <template id="todoTemplate" style="display: none">
     <li class="list__item task">
+        <div class="task__date"></div>
         <div class="task__status task__status_todo"></div>
         <span class="task__name">{{TODO}}</span>
         <div class="task__delete-button">❌</div>
